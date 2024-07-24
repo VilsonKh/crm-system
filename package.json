@@ -1,20 +1,38 @@
 {
-  "name": "nuxt-app",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
-  },
-  "dependencies": {
-    "@nuxt/image": "^1.7.0",
-    "nuxt": "^3.12.4",
-    "vue": "latest"
-  },
-  "devDependencies": {
-    "@nuxtjs/tailwindcss": "^6.12.1"
-  }
+	"name": "nuxt-app",
+	"private": true,
+	"type": "module",
+	"overrides": {
+		"vue": "latest"
+	},
+	"scripts": {
+		"build": "nuxt build",
+		"dev": "nuxt dev",
+		"generate": "nuxt generate",
+		"preview": "nuxt preview",
+		"postinstall": "nuxt prepare"
+	},
+	"dependencies": {
+		"@nuxt/image": "^1.7.0",
+		"@nuxtjs/google-fonts": "^3.2.0",
+		"@pinia/nuxt": "^0.5.1",
+		"@radix-icons/vue": "^1.0.0",
+		"@vueuse/core": "^10.11.0",
+		"appwrite": "^15.0.0",
+		"class-variance-authority": "^0.7.0",
+		"clsx": "^2.1.1",
+		"nuxt": "^3.12.4",
+		"pinia": "^2.1.7",
+		"radix-vue": "^1.9.2",
+		"tailwind-merge": "^2.4.0",
+		"tailwindcss-animate": "^1.0.7",
+		"vue": "latest",
+		"vue-uuid": "^3.0.0"
+	},
+	"devDependencies": {
+		"@nuxtjs/tailwindcss": "^6.12.1",
+		"@types/uuid": "^10.0.0",
+		"nuxt-icon": "^1.0.0-beta.7",
+		"shadcn-nuxt": "^0.10.4"
+	}
 }
