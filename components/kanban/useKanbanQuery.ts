@@ -7,15 +7,13 @@ import type { IDeal } from "~/types/deals.types";
 export function useKanbanQuery() {
 	return useQuery({
 		queryKey: ["deals"],
-		queryFn: () => (
-			DB.listDocuments(DB_ID, COLLECTION_DEALS)
-		),
+		queryFn: () => DB.listDocuments(DB_ID, COLLECTION_DEALS),
 		select(data) {
 			const newBoard = [...KANBAN_DATA];
-			console.log( data)
 			// @ts-ignore
 			const deals = data.documents as unknown as IDeal[];
 			for (const deal of deals) {
+				console.log(deal);
 				const column = newBoard.find((col) => col.id === deal.status);
 
 				if (column) {
@@ -28,9 +26,8 @@ export function useKanbanQuery() {
 						status: column.name,
 					});
 				}
-
-				return newBoard;
 			}
+			return newBoard;
 		},
 	});
 }
