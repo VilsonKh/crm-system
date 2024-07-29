@@ -9,11 +9,16 @@ export function useKanbanQuery() {
 		queryKey: ["deals"],
 		queryFn: () => DB.listDocuments(DB_ID, COLLECTION_DEALS),
 		select(data) {
-			const newBoard = [...KANBAN_DATA];
+			const newBoard = KANBAN_DATA.map(column => {
+				return {
+				...column,
+				items: [] as ICard[],
+			}});
+	
 			// @ts-ignore
 			const deals = data.documents as unknown as IDeal[];
+
 			for (const deal of deals) {
-				console.log(deal);
 				const column = newBoard.find((col) => col.id === deal.status);
 
 				if (column) {
@@ -27,6 +32,8 @@ export function useKanbanQuery() {
 					});
 				}
 			}
+
+
 			return newBoard;
 		},
 	});
