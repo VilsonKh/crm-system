@@ -78,7 +78,7 @@ function handleDrop(targetColumn: IColumn) {
 					@dragenter="handleDragEnter(column.id)"
 					@dragleave="handleDragLeave"
 					@drop="() => handleDrop(column)"
-					:class="{ 'bg-slate-700': column.id === highlightedColumnRef, 'transition-colors': true }"
+					:class="{ 'bg-column': column.id === highlightedColumnRef, 'transition-colors': true }"
 				>
 					<div
 						class="rounded bg-slate-700 py-1 px-5 mb-2"

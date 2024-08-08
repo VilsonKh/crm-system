@@ -1,5 +1,5 @@
 <template>
-	<div class="absolute w-full h-full flex justify-center items-center bg-black/70 rounded-xl z-10">
+	<div class="absolute w-full h-full flex justify-center items-center bg-black/20 dark:bg-black/90 rounded-xl z-10">
 		<Icon
 			class="animate-spin"
 			name="ph:spinner-gap-bold"
