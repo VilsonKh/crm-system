@@ -15,8 +15,6 @@ interface IDealFormState extends Pick<IDeal, "name" | "price"> {
 	status: string;
 }
 
-
-
 const props = defineProps({
 	status: {
 		type: String,

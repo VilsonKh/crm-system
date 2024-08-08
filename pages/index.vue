@@ -15,7 +15,8 @@ useSeoMeta({
 
 const dragCardRef = ref<ICard | null>(null);
 const sourceColumnRef = ref<IColumn | null>(null);
-const { data, isLoading, refetch } = useKanbanQuery();
+const highlightedColumnRef = ref<string | null>(null);
+const { data, isLoading, refetch, isFetching } = useKanbanQuery();
 const store = useDealSlideStore();
 
 type TypeMutationVariables = {
@@ -23,7 +24,7 @@ type TypeMutationVariables = {
 	status?: EnumStatus;
 };
 
-const { mutate } = useMutation({
+const { mutate, status } = useMutation({
 	mutationKey: ["move a card"],
 	//@ts-ignore
 	mutationFn: ({ docId, status }: TypeMutationVariables) => {
@@ -32,8 +33,8 @@ const { mutate } = useMutation({
 		});
 	},
 	onSuccess: () => {
-		refetch()
-	}
+		setTimeout(() => refetch(), 500);
+	},
 });
 
 function handleDragStart(card: ICard, column: IColumn) {
@@ -42,15 +43,26 @@ function handleDragStart(card: ICard, column: IColumn) {
 }
 
 function handleDragOver(event: DragEvent) {
-	event.preventDefault()
+	event.preventDefault();
 }
 
-function handleDrop(targetColumn: IColumn) {
-	if(dragCardRef.value && sourceColumnRef.value) {
-		mutate({docId: dragCardRef.value.id, status: targetColumn.id})
+function handleDragEnter(columnId: string) {
+	highlightedColumnRef.value = columnId;
+}
+
+function handleDragLeave(event: DragEvent) {
+	const relatedTarget = event.relatedTarget as HTMLElement;
+	if (!relatedTarget || !relatedTarget.closest("div")) {
+		highlightedColumnRef.value = null;
 	}
 }
 
+function handleDrop(targetColumn: IColumn) {
+	highlightedColumnRef.value = null;
+	if (dragCardRef.value && sourceColumnRef.value) {
+		mutate({ docId: dragCardRef.value.id, status: targetColumn.id });
+	}
+}
 </script>
 
 <template>
@@ -63,23 +75,35 @@ function handleDrop(targetColumn: IColumn) {
 					v-for="(column, index) in data"
 					:key="column.id"
 					@dragover="handleDragOver"
+					@dragenter="handleDragEnter(column.id)"
+					@dragleave="handleDragLeave"
 					@drop="() => handleDrop(column)"
-					class="min-h-screen"
+					:class="{ 'bg-slate-700': column.id === highlightedColumnRef, 'transition-colors': true }"
 				>
-					<div class="rounded bg-slate-700 py-1 px-5 mb-2" :style="generateColumnStyle(index, data?.length)">{{ column.name }}</div>
+					<div
+						class="rounded bg-slate-700 py-1 px-5 mb-2"
+						:style="generateColumnStyle(index, data?.length)"
+					>
+						{{ column.name }}
+					</div>
 					<div>
 						<KanbanCreateDeal
 							:refetch="refetch"
 							:status="column.id"
 						/>
 						<UiCard
-							class="mb-5"
+							class="mb-5 relative"
 							draggable="true"
 							v-for="card in column.items"
+							@dragenter="handleDragEnter(column.id)"
+							@dragleave="handleDragLeave"
 							:key="card.id"
 							@dragstart="() => handleDragStart(card, column)"
 						>
-							<UiCardHeader role="button" @click="store.set(card)"
+							<KanbanLoadingCover v-if="isFetching && card.id === dragCardRef?.id" />
+							<UiCardHeader
+								role="button"
+								@click="store.set(card)"
 								><UiCardTitle>{{ card.name }}</UiCardTitle>
 								<UiCardDescription class="mt-2 block">{{
 									convertCurrency(card.price)
@@ -93,7 +117,7 @@ function handleDrop(targetColumn: IColumn) {
 					</div>
 				</div>
 			</div>
-			<KanbanSlideover/>
+			<KanbanSlideover />
 		</div>
 	</div>
 </template>

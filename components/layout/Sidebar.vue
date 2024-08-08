@@ -40,6 +40,7 @@ const isLoadingStore = useIsLoadingStore()
 			/>
 		</button>
     <LayoutMenu/>
+		<LayoutThemeSwitch/>
 	</aside>
 </template>
 
